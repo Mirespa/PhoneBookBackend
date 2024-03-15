@@ -28,7 +28,7 @@ app.use(express.json())
 
 app.get('/info', (request, response) => {
     response.send(
-        `<div>Phonebook has info for ${Math.max(...persons.map(n => n.id))} people<div/>
+        `<div>Phonebook has info for ${persons.length} people<div/>
         <div>${Date()}<div/>`) 
 })
 
@@ -54,6 +54,20 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
+
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'Name or number is missing'
+        })
+    }
+
+    const personExists = persons.some(person => person.name === body.name)
+    if (personExists)  {
+        return response.status(400).json({
+            error: 'Name must be unique'
+        })
+    }
+
     const person = {
         name: body.name,
         number: body.number,
