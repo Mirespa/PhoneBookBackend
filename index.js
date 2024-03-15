@@ -26,6 +26,12 @@ let persons = [
 
 app.use(express.json())
 
+app.get('/info', (request, response) => {
+    response.send(
+        `<div>Phonebook has info for ${Math.max(...persons.map(n => n.id))} people<div/>
+        <div>${Date()}<div/>`) 
+})
+
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
